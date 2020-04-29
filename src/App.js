@@ -1,12 +1,18 @@
 import React from 'react';
 import './App.css';
-import { PrayerRequest } from './features/prayer/PrayerRequest';
+import { PrayerRequest, PrayerList } from './features/prayer/PrayerRequest';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <PrayerRequest />
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/" exact component={PrayerRequest} />
+          <Route path={["/förebedjare", "/forebedjare"]} component={PrayerList} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

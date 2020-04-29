@@ -48,6 +48,10 @@
   background-color: rgba(112, 76, 182, 0.2);
 }
 
+.buttonActive {
+  background-color: rgb(147, 126, 190);
+}
+
 .asyncButton {
   composes: button;
   position: relative;
