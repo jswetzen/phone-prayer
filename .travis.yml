@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "13"
+script:
+  - echo 'Build starts!!'
+  - echo 'Installing Deps!'
+  - yarn
+  - echo 'Compiling!'
+  - yarn build
