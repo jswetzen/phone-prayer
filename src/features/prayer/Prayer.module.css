@@ -50,7 +50,7 @@
 }
 
 .buttonActive {
-  background-color: rgb(147, 126, 190);
+  background-color: #b8b6a9;
 }
 
 .asyncButton {
@@ -90,7 +90,7 @@
   margin-top: 2em;
 }
 
-.requestForm input,select,button {
+.requestForm input,.requestForm select,.requestForm button {
   width: 100%;
   height: 2em;
   margin-bottom: 0.5em;
