@@ -29,9 +29,9 @@ class PrayerRequestLoader extends Component {
 export function PrayerRequestComponent() {
   const dispatch = useDispatch();
   const active = useSelector(selectActive);
-  const [name, setName] = useState('Kalle');
-  const [phone, setPhone] = useState('031');
-  const [gender, setGender] = useState('Man');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [gender, setGender] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   var result;
@@ -47,32 +47,43 @@ export function PrayerRequestComponent() {
         </div>;
   } else {
     result =
-        <div>
+        <div class={styles.requestForm}>
           <div>
-            <label htmlFor="name">Namn</label>
+            {/*<label htmlFor="name">Namn</label>*/}
             <input
               aria-label="Namn"
               id="name"
+              placeholder="Namn"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <br />
-            <label htmlFor="phone">Telefon</label>
+            {/*<label htmlFor="phone">Telefon</label>*/}
             <input
               aria-label="Telefonnummer"
               id="phone"
+              placeholder="Telefonnummer"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
             <br />
-            <label htmlFor="gender">Kön</label>
+            {/*<label htmlFor="gender">Kön</label>*/}
             <input
               aria-label="Kön"
-              id="gender"
+              id="phone"
+              placeholder="Kön"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
             />
             <br />
+            {/*
+            <select required>
+              <option value="" disabled selected hidden>Kön</option>
+              <option vaule="Kvinna">Kvinna</option>
+              <option value="Man">Man</option>
+              <option value="Annat">Annat (tex. par)</option>
+            </select>
+            <br />*/}
           </div>
           <div>
             <button
