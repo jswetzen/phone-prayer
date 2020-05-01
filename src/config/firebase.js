@@ -8,15 +8,9 @@ export const prayerRequestRef = databaseRef.child("prayerRequests");
 export const activeRef = databaseRef.child("prayerRequests/active");
 export const firebaseAuth = firebase.auth;
 
-export const signIn = (password, setLoggedin, setPrayerRequestState) => {
+export const signIn = (password) => {
     const email = "forbon@saron.se"
     firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((user) => {
-        prayerRequestRef.once('value').then(snapshot => {
-            //setLoggedin();
-            setPrayerRequestState(snapshot);
-        });
-    })
     .catch(function(error) {
     // Handle Errors here.
     console.log(error);

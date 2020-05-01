@@ -11,6 +11,7 @@ import {
   selectActive,
 } from './prayerSlice';
 import styles from './Prayer.module.css';
+import loaderStyles from './Loader.module.css';
 
 class PrayerRequestLoader extends Component {
     componentDidMount() {
@@ -26,6 +27,9 @@ class PrayerRequestLoader extends Component {
     }
 }
 
+const loadingIndicator = () => (
+  <div className={loaderStyles.ldsHeart}><div></div></div>);
+
 export function PrayerRequestComponent() {
   const dispatch = useDispatch();
   const active = useSelector(selectActive);
@@ -35,7 +39,9 @@ export function PrayerRequestComponent() {
   const [submitted, setSubmitted] = useState(false);
 
   var result;
-  if (!active) {
+  if (active === null) {
+    result = loadingIndicator();
+  } else if (!active) {
     result =
       <div>
         <span>Förbönen är öppen under gudstjänsterna på söndagar</span>
@@ -47,9 +53,8 @@ export function PrayerRequestComponent() {
         </div>;
   } else {
     result =
-        <div class={styles.requestForm}>
+        <div className={styles.requestForm}>
           <div>
-            {/*<label htmlFor="name">Namn</label>*/}
             <input
               aria-label="Namn"
               id="name"
@@ -58,7 +63,6 @@ export function PrayerRequestComponent() {
               onChange={(e) => setName(e.target.value)}
             />
             <br />
-            {/*<label htmlFor="phone">Telefon</label>*/}
             <input
               aria-label="Telefonnummer"
               id="phone"
@@ -67,10 +71,9 @@ export function PrayerRequestComponent() {
               onChange={(e) => setPhone(e.target.value)}
             />
             <br />
-            {/*<label htmlFor="gender">Kön</label>*/}
             <input
               aria-label="Kön"
-              id="phone"
+              id="gender"
               placeholder="Kön"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
@@ -143,13 +146,15 @@ export function PrayerListComponent() {
               setPrayed(k)
             )
           }}
-        >Uppringd</button>
+        >{v.prayed ? "Uppringd" : "Ring upp"}</button>
         {v.gender} - {v.name} <a href={`tel:${v.phone}`}>{v.phone}</a>
       </div>
       )}
   </div>)
 
-  if (loggedIn) {
+  if (loggedIn === null) {
+    return loadingIndicator();
+  } else if (loggedIn) {
     return prayerList;
   } else {
     return loginForm;

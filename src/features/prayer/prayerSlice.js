@@ -22,7 +22,8 @@ export const prayerSlice = createSlice({
     },
     setPrayed: (state, action) => {
       const requestId = action.payload;
-      prayerRequestRef.child(`requests/${requestId}/prayed`).set(true);
+      prayerRequestRef.child(`requests/${requestId}/prayed`)
+        .set(!state.value.requests[requestId].prayed);
     },
   },
 });
@@ -30,7 +31,7 @@ export const prayerSlice = createSlice({
 export const loginSlice = createSlice({
   name: "login",
   initialState: {
-    value: false,
+    value: null,
   },
   reducers: {
     setLoggedIn: (state, action) => {
@@ -42,7 +43,7 @@ export const loginSlice = createSlice({
 export const activeSlice = createSlice({
   name: "active",
   initialState: {
-    value: false,
+    value: null,
   },
   reducers: {
     setActive: (state, action) => {
@@ -66,41 +67,41 @@ export const selectPrayerRequests = state => {
 };
 
 export const doLogin = password => dispatch => {
-  signIn(password, () => {
-      setTimeout(() => {
-        dispatch(setLoggedIn(true))
-      });
-  }, (snapshot) => {
-    dispatch(prayerSlice.actions.setPrayerRequests(snapshot.val()));
-  });
+  signIn(password);
 }
 
 export const fetchPrayerRequests = () => async (dispatch) => {
-  firebaseAuth().onAuthStateChanged((user) => {
-    if (user) {
-      setTimeout(() => {
-        dispatch(setLoggedIn(true));
-      });
-    } else {
-      console.log("not logged in user:"+user)
-      setTimeout(() => {
-        dispatch(setLoggedIn(false));
-      });
-    }
-  });
-  prayerRequestRef.on("value", (snapshot) => {
-    setTimeout(() => {
-      dispatch(prayerSlice.actions.setPrayerRequests(snapshot.val()));
+  setTimeout(() => {
+    firebaseAuth().onAuthStateChanged((user) => {
+      console.log("got auth change");
+      if (user) {
+        setTimeout(() => {
+          console.log("about to start listening");
+          prayerRequestRef.on("value", (snapshot) => {
+            console.log("got new snapshot");
+            setTimeout(() => {
+              dispatch(prayerSlice.actions.setPrayerRequests(snapshot.val()));
+            });
+          });
+          dispatch(setLoggedIn(true));
+        }); 
+      } else {
+        console.log("not logged in user:"+user)
+        setTimeout(() => {
+          dispatch(setLoggedIn(false));
+        });
+      }
     });
   });
 };
 
 /* Is the prayer active right now? */
 export const fetchActive = () => async (dispatch) => {
-  activeRef.on("value", (snapshot) => {
-    console.log(snapshot);
-    setTimeout(() => {
-      dispatch(activeSlice.actions.setActive(snapshot.val()));
+  setTimeout(() => {
+    activeRef.on("value", (snapshot) => {
+      setTimeout(() => {
+        dispatch(activeSlice.actions.setActive(snapshot.val()));
+      });
     });
   });
 };
