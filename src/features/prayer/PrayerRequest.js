@@ -113,6 +113,14 @@ export function PrayerListComponent() {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
+  const decodeGender = (text) => {
+    switch (text) {
+      case "male": return "♂";
+      case "female": return "♀";
+      default: return "?";
+    }
+  }
+
   const loginForm = (
     <div>
       <h1>Ange lösenord för förebedjare</h1>
@@ -137,18 +145,25 @@ export function PrayerListComponent() {
 
   const prayerList = (<div>
     {Object.entries(prayerRequests).map(([k, v], i) =>
-      <div key={k}>
+      <div key={k} className={styles.prayerRequestItem}>
         <button
-          className={`${styles.button} ${v.prayed ? styles.buttonActive : ""}`}
+          className={` ${styles.prayedButton} ${styles.button} ${v.prayed ? styles.buttonActive : ""}`}
           aria-label="Be"
           onClick={() => {
             dispatch(
               setPrayed(k)
             )
           }}
-        >{v.prayed ? "Uppringd" : "Ring upp"}</button>
-        {v.gender} - {v.name} <a href={`tel:${v.phone}`}>{v.phone}</a>
-      </div>
+        ><span role="img" aria-label="Ring">📞</span></button>
+        <div className={styles.gender}>{decodeGender(v.gender)}</div>
+        <div>
+          <div className={styles.name}>{v.name}</div>
+          <div className={styles.phone}>
+            <a href={`tel:${v.phone}`}
+              onClick={() => {dispatch(setPrayed(k))}}
+            >{v.phone}</a></div>
+          </div>
+        </div>
       )}
   </div>)
 
