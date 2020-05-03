@@ -71,6 +71,7 @@ export function PrayerRequestComponent() {
               onChange={(e) => setPhone(e.target.value)}
             />
             <br />
+            {/*
             <input
               aria-label="Kön"
               id="gender"
@@ -79,14 +80,14 @@ export function PrayerRequestComponent() {
               onChange={(e) => setGender(e.target.value)}
             />
             <br />
-            {/*
-            <select required>
-              <option value="" disabled selected hidden>Kön</option>
-              <option vaule="Kvinna">Kvinna</option>
-              <option value="Man">Man</option>
-              <option value="Annat">Annat (tex. par)</option>
+            */}
+            <select value={gender} required onChange={(e) => setGender(e.target.value)}>
+              <option value="" disabled hidden>Kön</option>
+              <option value="female">Kvinna</option>
+              <option value="male">Man</option>
+              <option value="other">Annat (t.ex. par)</option>
             </select>
-            <br />*/}
+            <br />
           </div>
           <div>
             <button
