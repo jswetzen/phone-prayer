@@ -55,6 +55,7 @@ export function PrayerRequestComponent() {
   } else {
     result =
         <div className={styles.requestForm}>
+          <img className={styles.fullWidthImg} alt="Saronkyrkan logo" src="img/saronlogo.jpg" />
           <div>
             <input
               className={styles.fullWidthInput}
