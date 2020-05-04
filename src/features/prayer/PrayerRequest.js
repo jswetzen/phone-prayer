@@ -37,6 +37,7 @@ export function PrayerRequestComponent() {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [GDPRChecked, setGDPRChecked] = useState(false);
 
   var result;
   if (active === null) {
@@ -56,6 +57,7 @@ export function PrayerRequestComponent() {
         <div className={styles.requestForm}>
           <div>
             <input
+              className={styles.fullWidthInput}
               aria-label="Namn"
               id="name"
               placeholder="Namn"
@@ -64,6 +66,7 @@ export function PrayerRequestComponent() {
             />
             <br />
             <input
+              className={styles.fullWidthInput}
               aria-label="Telefonnummer"
               id="phone"
               placeholder="Telefonnummer"
@@ -71,34 +74,33 @@ export function PrayerRequestComponent() {
               onChange={(e) => setPhone(e.target.value)}
             />
             <br />
-            {/*
-            <input
-              aria-label="Kön"
-              id="gender"
-              placeholder="Kön"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            />
-            <br />
-            */}
-            <select value={gender} required onChange={(e) => setGender(e.target.value)}>
+            <select className={styles.fullWidthInput} id="gender" value={gender} required onChange={(e) => setGender(e.target.value)}>
               <option value="" disabled hidden>Kön</option>
               <option value="female">Kvinna</option>
               <option value="male">Man</option>
               <option value="other">Annat (t.ex. par)</option>
             </select>
-            <br />
+          </div>
+          <div className={styles.consentBox}>
+            <input
+              id="gdprConsent"
+              type="checkbox"
+              checked={GDPRChecked}
+              onChange={(e) => setGDPRChecked(!GDPRChecked)} />
+            <label htmlFor="gdprConsent">
+              <span>Jag samtycker till lagring av uppgifter i Googles Firebase i enlighet med Sarons policy för personuppgifter.</span>
+            </label>
           </div>
           <div>
             <button
-              className={styles.button}
+              className={`${styles.button} ${!GDPRChecked ? styles.buttonDisabled : ""}`}
               aria-label="Jag önskar förbön"
-              onClick={() => {
+              onClick={GDPRChecked ? () => {
                 setSubmitted(true);
                 dispatch(
                   requestPrayer({ name: name, gender: gender, phone: phone })
                 );
-              }}
+              } : () => {}}
             >
               Jag önskar förbön
             </button>

@@ -14,6 +14,8 @@ export const prayerSlice = createSlice({
               name: name,
               phone: phone,
               gender: gender,
+              requestTime: + new Date(),
+              prayedTime: null,
               prayed: false,
             });
     },
