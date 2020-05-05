@@ -179,7 +179,6 @@
 }
 
 .phone,.name {
-  /*background-color: white;*/
-  line-height: 2em;
-  height: 50%;
+  font-size: 1.5em;
+  margin-left: 0.5em;
 }
