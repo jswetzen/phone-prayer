@@ -89,7 +89,9 @@ export function PrayerRequestComponent() {
               checked={GDPRChecked}
               onChange={(e) => setGDPRChecked(!GDPRChecked)} />
             <label htmlFor="gdprConsent">
-              <span>Jag samtycker till lagring av uppgifter i Googles Firebase i enlighet med Sarons policy för personuppgifter.</span>
+              <span>
+                Jag samtycker till lagring av data enligt GDPR. De uppgifter du lämnar här används endast av förebedjarna och raderas så fort ni haft kontakt. Vi använder Google Firebase för detta formuläret.
+              </span>
             </label>
           </div>
           <div>
@@ -115,6 +117,7 @@ export function PrayerListComponent() {
   const prayerRequests = useSelector(selectPrayerRequests);
   const loggedIn = useSelector(selectLoggedIn);
   const [password, setPassword] = useState('');
+  const [GDPRChecked, setGDPRChecked] = useState(false);
   const dispatch = useDispatch();
 
   const decodeGender = (text) => {
@@ -126,23 +129,37 @@ export function PrayerListComponent() {
   }
 
   const loginForm = (
-    <div>
+    <div className={styles.requestForm}>
       <h1>Ange lösenord för förebedjare</h1>
       <input
+        className={styles.fullWidthInput}
         aria-label="Lösenord"
         id="password"
         value={password}
         type="password"
         onChange={(e) => setPassword(e.target.value)}
-      /><br />
+      />
+      <div className={styles.consentBox}>
+        <input
+          id="gdprConsent"
+          type="checkbox"
+          checked={GDPRChecked}
+          onChange={(e) => setGDPRChecked(!GDPRChecked)} />
+        <label htmlFor="gdprConsent">
+          <span>
+            Jag samtycker till lagring av IP-adress samt webbläsarversion i fem dagar för att spara inloggningen.
+            Saron använder Googles databastjänst Firebase.
+          </span>
+        </label>
+      </div>
       <button
-        className={styles.button}
+        className={`${styles.button} ${!GDPRChecked ? styles.buttonDisabled : ""}`}
         aria-label="Logga in"
-        onClick={() => {
+        onClick={GDPRChecked ? () => {
           dispatch(
             doLogin(password)
-          )
-        }}
+          );
+        } : () => {}}
       >Logga in</button>
     </div>
   );
