@@ -8,12 +8,11 @@ export const prayerSlice = createSlice({
   },
   reducers: {
     requestPrayer: (state, action) => {
-      const { phone, name, gender } = action.payload;
+      const { phone, name } = action.payload;
       const newRequestKey = prayerRequestRef.child('requests').push().key;
       prayerRequestRef.child(`requests/${newRequestKey}`).set({
               name: name,
               phone: phone,
-              gender: gender,
               requestTime: + new Date(),
               prayedTime: null,
               prayed: false,

@@ -35,7 +35,6 @@ export function PrayerRequestComponent() {
   const active = useSelector(selectActive);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [GDPRChecked, setGDPRChecked] = useState(false);
 
@@ -79,13 +78,6 @@ export function PrayerRequestComponent() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
-            <br />
-            <select className={styles.fullWidthInput} id="gender" value={gender} required onChange={(e) => setGender(e.target.value)}>
-              <option value="" disabled hidden>Kön</option>
-              <option value="female">Kvinna</option>
-              <option value="male">Man</option>
-              <option value="other">Annat (t.ex. par)</option>
-            </select>
           </div>
           <div className={styles.textBlock}>
             <input
@@ -106,7 +98,7 @@ export function PrayerRequestComponent() {
               onClick={GDPRChecked ? () => {
                 setSubmitted(true);
                 dispatch(
-                  requestPrayer({ name: name, gender: gender, phone: phone })
+                  requestPrayer({ name: name, phone: phone })
                 );
               } : () => {}}
             >
@@ -125,13 +117,13 @@ export function PrayerListComponent() {
   const [GDPRChecked, setGDPRChecked] = useState(false);
   const dispatch = useDispatch();
 
-  const decodeGender = (text) => {
-    switch (text) {
-      case "male": return "♂";
-      case "female": return "♀";
-      default: return "?";
+  const sortRequests = ([k1, v1], [k2, v2]) => {
+    if (v1.requestTime > v2.requestTime) {
+      return 1;
+    } else {
+      return -1;
     }
-  }
+  };
 
   const loginForm = (
     <div className={styles.requestForm}>
@@ -170,7 +162,7 @@ export function PrayerListComponent() {
   );
 
   const prayerList = (<div>
-    {Object.entries(prayerRequests).map(([k, v], i) =>
+    {Object.entries(prayerRequests).sort(sortRequests).map(([k, v], i) =>
       <div key={k} className={styles.prayerRequestItem}>
         <button
           className={` ${styles.prayedButton} ${styles.button} ${v.prayed ? styles.buttonActive : ""}`}
@@ -181,7 +173,6 @@ export function PrayerListComponent() {
             )
           }}
         ><span role="img" aria-label="Ring">📞</span></button>
-        <div className={styles.gender}>{decodeGender(v.gender)}</div>
         <div>
           <div className={styles.name}>{v.name}</div>
           <div className={styles.phone}>
