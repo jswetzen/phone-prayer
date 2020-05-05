@@ -44,18 +44,23 @@ export function PrayerRequestComponent() {
     result = loadingIndicator();
   } else if (!active) {
     result =
-      <div>
-        <span>Förbönen är öppen under gudstjänsterna på söndagar</span>
+      <div className={styles.requestForm}>
+        <img className={styles.fullWidthImg} alt="Saronkyrkan logo" src="img/saronlogo.jpg" />
+        <h2>Förbönen är öppen efter söndagens gudstjänst mellan 12.00 och 12.45</h2>
       </div>;
   } else if (submitted) {
     result =
-        <div>
-          <span>Du kommer bli uppringd!</span>
+        <div className={styles.requestForm}>
+        <img className={styles.fullWidthImg} alt="Saronkyrkan logo" src="img/saronlogo.jpg" />
+          <h2>En av våra förebedjare kommer att ringa upp dig inom kort</h2>
         </div>;
   } else {
     result =
         <div className={styles.requestForm}>
           <img className={styles.fullWidthImg} alt="Saronkyrkan logo" src="img/saronlogo.jpg" />
+          <span className={styles.textBlock}>
+            Önskar du förbön så skriv ditt namn och telefonnummer här för att bli uppringd av en förebedjare som har församlingens förtroende.
+          </span>
           <div>
             <input
               className={styles.fullWidthInput}
@@ -82,7 +87,7 @@ export function PrayerRequestComponent() {
               <option value="other">Annat (t.ex. par)</option>
             </select>
           </div>
-          <div className={styles.consentBox}>
+          <div className={styles.textBlock}>
             <input
               id="gdprConsent"
               type="checkbox"

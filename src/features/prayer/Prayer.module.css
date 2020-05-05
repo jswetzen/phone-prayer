@@ -111,8 +111,8 @@
   border: 1px solid lightgray;
 }
 
-.consentBox {
-  text-align: left;
+.textBlock {
+  text-align: justify;
   margin-bottom: 0.5em;
 }
 
