@@ -33,6 +33,11 @@
   margin-top: 5px;
 }
 
+.disableLink {
+  text-decoration: none;
+  color: black;
+}
+
 .textbox {
   font-size: 32px;
   padding: 2px;
@@ -41,16 +46,12 @@
   margin-right: 8px;
 }
 
-.button:hover, .button:focus {
-  /*border: 2px solid rgba(112, 76, 182, 0.4);*/
-}
-
 .button:active {
   background-color: #c5b235;
 }
 
 .buttonActive {
-  background-color: #b8b6a9;
+  background-color: #e8e8e8;
 }
 
 .buttonDisabled {

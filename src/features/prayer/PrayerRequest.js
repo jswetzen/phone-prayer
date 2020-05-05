@@ -176,7 +176,8 @@ export function PrayerListComponent() {
         <div>
           <div className={styles.name}>{v.name}</div>
           <div className={styles.phone}>
-            <a href={`tel:${v.phone}`}
+            <a className={v.prayed ? styles.disableLink : ""}
+              href={`tel:${v.phone}`}
               onClick={() => {dispatch(setPrayed(k))}}
             >{v.phone}</a></div>
           </div>
