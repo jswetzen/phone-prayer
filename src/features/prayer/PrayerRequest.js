@@ -4,11 +4,13 @@ import {
   requestPrayer,
   fetchActive,
   fetchPrayerRequests,
+  fetchAdmin,
   selectPrayerRequests,
   setPrayed,
   doLogin,
   selectLoggedIn,
   selectActive,
+  toggleActive,
 } from './prayerSlice';
 import styles from './Prayer.module.css';
 import loaderStyles from './Loader.module.css';
@@ -110,6 +112,76 @@ export function PrayerRequestComponent() {
         return result;
 }
 
+function AdminComponent() {
+  const active = useSelector(selectActive);
+  const loggedIn = useSelector(selectLoggedIn);
+  const [password, setPassword] = useState('');
+  const [GDPRChecked, setGDPRChecked] = useState(false);
+  const dispatch = useDispatch();
+
+
+  const loginForm = (
+    <div className={styles.requestForm}>
+      <h1>Ange lösenord för förebedjare</h1>
+      <input
+        className={styles.fullWidthInput}
+        aria-label="Lösenord"
+        id="password"
+        value={password}
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <div className={styles.consentBox}>
+        <input
+          id="gdprConsent"
+          type="checkbox"
+          checked={GDPRChecked}
+          onChange={(e) => setGDPRChecked(!GDPRChecked)} />
+        <label htmlFor="gdprConsent">
+          <span>
+            Jag samtycker till lagring av IP-adress samt webbläsarversion i fem dagar för att spara inloggningen.
+            Saron använder Googles databastjänst Firebase.
+          </span>
+        </label>
+      </div>
+      <button
+        className={`${styles.button} ${!GDPRChecked ? styles.buttonDisabled : ""}`}
+        aria-label="Logga in"
+        onClick={GDPRChecked ? () => {
+          dispatch(
+            doLogin(password)
+          );
+        } : () => {}}
+      >Logga in</button>
+    </div>
+  );
+
+  const buttonText = active ? "Stäng förbönen" : "Öppna förbönen";
+
+  const adminInterface = (
+    <div>
+      <h1>Förbönen är {active ? "öppen" : "stängd"}</h1>
+      <button
+        className={`${styles.button} ${active ? styles.buttonDisabled : ""}`}
+        aria-label={buttonText}
+        onClick={() => {
+          dispatch(
+            toggleActive(!active)
+          );
+        }}
+      >{buttonText}</button>
+    </div>
+  );
+
+  if (loggedIn === null) {
+    return loadingIndicator();
+  } else if (loggedIn) {
+    return adminInterface;
+  } else {
+    return loginForm;
+  }
+}
+
 export function PrayerListComponent() {
   const prayerRequests = useSelector(selectPrayerRequests);
   const loggedIn = useSelector(selectLoggedIn);
@@ -194,8 +266,10 @@ export function PrayerListComponent() {
   }
 }
 
+const adminComponentProps = () => ({childComponent: AdminComponent});
 const prayerRequestComponentProps = () => ({childComponent: PrayerRequestComponent});
 const prayerListComponentProps = () => ({childComponent: PrayerListComponent});
 
 export const PrayerRequest = connect(prayerRequestComponentProps, {fetchData: fetchActive})(PrayerRequestLoader);
+export const PrayerAdmin = connect(adminComponentProps, {fetchData: fetchAdmin})(PrayerRequestLoader);
 export const PrayerList = connect(prayerListComponentProps, {fetchData: fetchPrayerRequests})(PrayerRequestLoader);

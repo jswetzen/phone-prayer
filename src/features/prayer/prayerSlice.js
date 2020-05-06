@@ -50,12 +50,15 @@ export const activeSlice = createSlice({
     setActive: (state, action) => {
       state.value = action.payload;
     },
+    toggleActive: (state, action) => {
+      activeRef.set(!state.value);
+    },
   },
 });
 
 export const { requestPrayer, setPrayed } = prayerSlice.actions;
 export const { setLoggedIn } = loginSlice.actions;
-export const { setActive } = activeSlice.actions;
+export const { toggleActive } = activeSlice.actions;
 
 export const selectActive = state => state.active.value
 export const selectLoggedIn = state => state.login.value
@@ -95,6 +98,25 @@ export const fetchPrayerRequests = () => async (dispatch) => {
     });
   });
 };
+
+export const fetchAdmin = () => async (dispatch) => {
+  setTimeout(() => {
+    firebaseAuth().onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(setLoggedIn(true));
+      } else {
+        dispatch(setLoggedIn(false));
+      }
+    });
+  });
+  setTimeout(() => {
+    activeRef.on("value", (snapshot) => {
+      setTimeout(() => {
+        dispatch(activeSlice.actions.setActive(snapshot.val()));
+      });
+    });
+  });
+}
 
 /* Is the prayer active right now? */
 export const fetchActive = () => async (dispatch) => {
