@@ -77,12 +77,9 @@ export const doLogin = password => dispatch => {
 export const fetchPrayerRequests = () => async (dispatch) => {
   setTimeout(() => {
     firebaseAuth().onAuthStateChanged((user) => {
-      console.log("got auth change");
       if (user) {
         setTimeout(() => {
-          console.log("about to start listening");
           prayerRequestRef.on("value", (snapshot) => {
-            console.log("got new snapshot");
             setTimeout(() => {
               dispatch(prayerSlice.actions.setPrayerRequests(snapshot.val()));
             });
