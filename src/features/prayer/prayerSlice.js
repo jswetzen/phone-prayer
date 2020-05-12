@@ -1,5 +1,7 @@
-import { prayerRequestRef, activeRef, signIn, firebaseAuth } from "../../config/firebase"
 import { createSlice } from '@reduxjs/toolkit';
+import { signIn, currentUser, getPrayerRequest, PrayerRequest, activeQuery, onActiveQueryFetchOrChange, onRequestQueryFetchOrUpdate } from "../../config/parse";
+
+const CHURCH_ID = "saron";
 
 export const prayerSlice = createSlice({
   name: "prayerrequest",
@@ -9,22 +11,27 @@ export const prayerSlice = createSlice({
   reducers: {
     requestPrayer: (state, action) => {
       const { phone, name } = action.payload;
-      const newRequestKey = prayerRequestRef.child('requests').push().key;
-      prayerRequestRef.child(`requests/${newRequestKey}`).set({
-              name: name,
-              phone: phone,
-              requestTime: + new Date(),
-              prayedTime: null,
-              prayed: false,
-            });
+      new PrayerRequest().save({
+        churchId: CHURCH_ID,
+        name: name,
+        phone: phone,
+        requestTime: new Date(),
+      });
     },
     setPrayerRequests: (state, action) => {
-      state.value = action.payload;
+      if (state.value === null) {
+        state.value = {};
+      }
+      for (let request of action.payload) {
+        state.value[request.id] = request;
+      }
     },
     setPrayed: (state, action) => {
-      const requestId = action.payload;
-      prayerRequestRef.child(`requests/${requestId}/prayed`)
-        .set(!state.value.requests[requestId].prayed);
+      getPrayerRequest(action.payload).then((request) => {
+        const prayedTime = request.get("prayedTime") === null ? new Date() : null;
+        request.set("prayedTime", prayedTime);
+        request.save();
+      });
     },
   },
 });
@@ -51,7 +58,10 @@ export const activeSlice = createSlice({
       state.value = action.payload;
     },
     toggleActive: (state, action) => {
-      activeRef.set(!state.value);
+    activeQuery().first().then((prayerRoom) => {
+      prayerRoom.set("active", !prayerRoom.get("active"));
+      prayerRoom.save();
+    });
     },
   },
 });
@@ -66,63 +76,51 @@ export const selectPrayerRequests = state => {
   if (state.prayerrequest.value === null) {
     return {};
   } else {
-    return state.prayerrequest.value.requests;
+    return state.prayerrequest.value;
   }
 };
 
 export const doLogin = password => dispatch => {
-  signIn(password);
+  signIn(password).then((user) => {
+    if (user) {
+      dispatch(setLoggedIn(true));
+      onRequestQueryFetchOrUpdate((requests) =>
+        dispatch(prayerSlice.actions.setPrayerRequests(requests))
+      );
+    }
+  });
 }
 
 export const fetchPrayerRequests = () => async (dispatch) => {
-  setTimeout(() => {
-    firebaseAuth().onAuthStateChanged((user) => {
-      if (user) {
-        setTimeout(() => {
-          prayerRequestRef.on("value", (snapshot) => {
-            setTimeout(() => {
-              dispatch(prayerSlice.actions.setPrayerRequests(snapshot.val()));
-            });
-          });
-          dispatch(setLoggedIn(true));
-        }); 
-      } else {
-        console.log("not logged in user:"+user)
-        setTimeout(() => {
-          dispatch(setLoggedIn(false));
-        });
-      }
-    });
+  currentUser().then((user) => {
+    if (user) {
+      dispatch(setLoggedIn(true));
+      onRequestQueryFetchOrUpdate((requests) =>
+        dispatch(prayerSlice.actions.setPrayerRequests(requests))
+        );
+    } else {
+      dispatch(setLoggedIn(false));
+    }
   });
 };
 
 export const fetchAdmin = () => async (dispatch) => {
-  setTimeout(() => {
-    firebaseAuth().onAuthStateChanged((user) => {
-      if (user) {
-        dispatch(setLoggedIn(true));
-      } else {
-        dispatch(setLoggedIn(false));
-      }
-    });
+  currentUser().then((user) => {
+    if (user) {
+      dispatch(setLoggedIn(true));
+    } else {
+      dispatch(setLoggedIn(false));
+    }
   });
-  setTimeout(() => {
-    activeRef.on("value", (snapshot) => {
-      setTimeout(() => {
-        dispatch(activeSlice.actions.setActive(snapshot.val()));
-      });
-    });
+  onActiveQueryFetchOrChange((active) => {
+    dispatch(activeSlice.actions.setActive(active));
   });
 }
 
 /* Is the prayer active right now? */
 export const fetchActive = () => async (dispatch) => {
-  setTimeout(() => {
-    activeRef.on("value", (snapshot) => {
-      setTimeout(() => {
-        dispatch(activeSlice.actions.setActive(snapshot.val()));
-      });
-    });
+  onActiveQueryFetchOrChange((active) => {
+    dispatch(activeSlice.actions.setActive(active));
   });
 };
 

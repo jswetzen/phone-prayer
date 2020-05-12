@@ -237,7 +237,7 @@ export function PrayerListComponent() {
     {Object.entries(prayerRequests).sort(sortRequests).map(([k, v], i) =>
       <div key={k} className={styles.prayerRequestItem}>
         <button
-          className={` ${styles.prayedButton} ${styles.button} ${v.prayed ? styles.buttonActive : ""}`}
+          className={` ${styles.prayedButton} ${styles.button} ${v.prayedTime === 0 ? styles.buttonActive : ""}`}
           aria-label="Be"
           onClick={() => {
             dispatch(
@@ -248,7 +248,7 @@ export function PrayerListComponent() {
         <div>
           <div className={styles.name}>{v.name}</div>
           <div className={styles.phone}>
-            <a className={v.prayed ? styles.disableLink : ""}
+            <a className={v.prayedTime === 0 ? styles.disableLink : ""}
               href={`tel:${v.phone}`}
               onClick={() => {dispatch(setPrayed(k))}}
             >{v.phone}</a></div>
