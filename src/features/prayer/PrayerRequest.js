@@ -259,7 +259,13 @@ export function PrayerListComponent() {
   if (loggedIn === null) {
     return loadingIndicator();
   } else if (loggedIn) {
-    return prayerList;
+    if (Object.entries(prayerRequests).length === 0) {
+      return <div>
+        Här var det tomt ¯\_(ツ)_/¯
+      </div>
+    } else {
+      return prayerList;
+    }
   } else {
     return loginForm;
   }
