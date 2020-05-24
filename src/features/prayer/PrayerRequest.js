@@ -7,6 +7,7 @@ import {
   fetchAdmin,
   selectPrayerRequests,
   setPrayed,
+  togglePrayed,
   doLogin,
   selectLoggedIn,
   selectActive,
@@ -236,18 +237,18 @@ export function PrayerListComponent() {
     {Object.entries(prayerRequests).sort(sortRequests).map(([k, v], i) =>
       <div key={k} className={styles.prayerRequestItem}>
         <button
-          className={` ${styles.prayedButton} ${styles.button} ${v.prayedTime === 0 ? styles.buttonActive : ""}`}
+          className={` ${styles.prayedButton} ${styles.button} ${v.prayedTime !== 0 ? styles.buttonActive : ""}`}
           aria-label="Be"
           onClick={() => {
             dispatch(
-              setPrayed(k)
+              togglePrayed(k)
             )
           }}
         ><span role="img" aria-label="Ring">📞</span></button>
         <div>
           <div className={styles.name}>{v.name}</div>
           <div className={styles.phone}>
-            <a className={v.prayedTime === 0 ? styles.disableLink : ""}
+            <a className={v.prayedTime !== 0 ? styles.disableLink : ""}
               href={`tel:${v.phone}`}
               onClick={() => {dispatch(setPrayed(k))}}
             >{v.phone}</a></div>
@@ -260,7 +261,7 @@ export function PrayerListComponent() {
     return loadingIndicator();
   } else if (loggedIn) {
     if (Object.entries(prayerRequests).length === 0) {
-      return <div>
+      return <div className={styles.prayerRequestPlaceholder}>
         Här var det tomt ¯\_(ツ)_/¯
       </div>
     } else {

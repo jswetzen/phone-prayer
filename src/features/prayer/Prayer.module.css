@@ -130,6 +130,10 @@
   width: 100%;
 }
 
+.prayerRequestPlaceholder {
+  margin-top: 1em;
+}
+
 .prayerRequestItem {
   background-color: #e8e8e8;
   width: 95%;

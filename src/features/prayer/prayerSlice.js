@@ -16,6 +16,7 @@ export const prayerSlice = createSlice({
         name: name,
         phone: phone,
         requestTime: new Date(),
+        prayedTime: null,
       });
     },
     setPrayerRequests: (state, action) => {
@@ -27,6 +28,14 @@ export const prayerSlice = createSlice({
       }
     },
     setPrayed: (state, action) => {
+      getPrayerRequest(action.payload).then((request) => {
+        if (request.get("prayedTime") === null) {
+          request.set("prayedTime", new Date());
+          request.save();
+        }
+      });
+    },
+    togglePrayed: (state, action) => {
       getPrayerRequest(action.payload).then((request) => {
         const prayedTime = request.get("prayedTime") === null ? new Date() : null;
         request.set("prayedTime", prayedTime);
@@ -74,7 +83,7 @@ export const activeSlice = createSlice({
   },
 });
 
-export const { requestPrayer, setPrayed } = prayerSlice.actions;
+export const { requestPrayer, togglePrayed, setPrayed } = prayerSlice.actions;
 export const { setLoggedIn } = loginSlice.actions;
 export const { toggleActive } = activeSlice.actions;
 
