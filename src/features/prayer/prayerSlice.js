@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signIn, currentUser, getPrayerRequest, PrayerRequest, activeQuery, onActiveQueryFetchOrChange, onRequestQueryFetchOrUpdate } from "../../config/parse";
+import { signIn, currentUser, getPrayerRequest, PrayerRequest, activeQuery, onActiveQueryFetchOrChange, onRequestQueryFetchOrUpdate, requestsQuery } from "../../config/parse";
 
 const CHURCH_ID = "saron";
 
@@ -61,6 +61,14 @@ export const activeSlice = createSlice({
     activeQuery().first().then((prayerRoom) => {
       prayerRoom.set("active", !prayerRoom.get("active"));
       prayerRoom.save();
+      if (prayerRoom.get("active")) {
+        requestsQuery().find().then((prayerRequests) => {
+          for (let request of prayerRequests) {
+            console.log(request);
+            request.destroy();
+          }
+        });
+      }
     });
     },
   },
