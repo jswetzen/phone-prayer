@@ -89,7 +89,7 @@ export function PrayerRequestComponent() {
               onChange={(e) => setGDPRChecked(!GDPRChecked)} />
             <label htmlFor="gdprConsent">
               <span>
-                Jag samtycker till lagring av data enligt GDPR. De uppgifter du lämnar här används endast av förebedjarna och raderas så fort ni haft kontakt. Vi använder Google Firebase för detta formuläret.
+                Jag samtycker till lagring av data enligt GDPR. De uppgifter du lämnar här används endast av förebedjarna och raderas så fort ni haft kontakt.
               </span>
             </label>
           </div>
@@ -139,8 +139,7 @@ function AdminComponent() {
           onChange={(e) => setGDPRChecked(!GDPRChecked)} />
         <label htmlFor="gdprConsent">
           <span>
-            Jag samtycker till lagring av IP-adress samt webbläsarversion i fem dagar för att spara inloggningen.
-            Saron använder Googles databastjänst Firebase.
+            Jag samtycker till användandet av kakor för att spara inloggningen.
           </span>
         </label>
       </div>
