@@ -48,7 +48,7 @@ export function PrayerRequestComponent() {
     result =
       <div className={styles.requestForm}>
         <img className={styles.fullWidthImg} alt="Saronkyrkan logo" src="img/saronlogo.jpg" />
-        <h2>Förbönen är öppen i anslutning till söndagens gudstjänst mellan kl. 12.00 och 12.45</h2>  
+        <h2>Vi försöker ha förebedjare tillgänglig via telefon varje söndag.<br />Om förebedjare finns är förbönen öppen efter söndagens gudstjänst mellan kl. 12.00 och 12.45.</h2>  
       </div>;
   } else if (submitted) {
     result =
